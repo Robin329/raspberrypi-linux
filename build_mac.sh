@@ -19,7 +19,7 @@ usage() {
 
 copy_result() {
     echo "== copy to server =="
-    cp -raf out/arch/arm64/boot/Image* out/arch/arm64/boot/dts/broadcom/*.dtb ~/Home/workspace/project/rpi_boot/
+    cp -raf build/arch/arm64/boot/Image* build/arch/arm64/boot/dts/broadcom/*.dtb ~/Home/workspace/project/rpi_boot/
     echo "== copy END       =="
 }
 
@@ -32,7 +32,7 @@ while getopts "hc:a:m:d:i:" opt; do
     c)
         echo "./build.sh -c $OPTARG"
         if [ "$OPTARG" = "config" ]; then
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcm2711_defconfig O=out
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcm2711_defconfig O=build
         else
             echo "ERROR input params!!!"
             echo "Please input Right params!"
@@ -43,7 +43,8 @@ while getopts "hc:a:m:d:i:" opt; do
     d)
         echo "./build.sh -d $OPTARG"
         if [ "$OPTARG" = "dtbs" ]; then
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs O=out
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs O=build
+            cp -rf build/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb /home/ubuntu/Home/workspace/project/rpi_boot/
         else
             echo "ERROR input params!!!"
             echo "Please input Right params!"
@@ -54,11 +55,11 @@ while getopts "hc:a:m:d:i:" opt; do
     i)
         echo "./build.sh -d $OPTARG"
         if [ "$OPTARG" = "image" ]; then
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=out
-            cp -rf out/arch/arm64/boot/Image /home/ubuntu/Home/workspace/project/rpi_boot/
-            ./scripts/clang-tools/gen_compile_commands.py -d out/
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=build
+            cp -rf build/arch/arm64/boot/Image /home/ubuntu/Home/workspace/project/rpi_boot/
+            ./scripts/clang-tools/gen_compile_commands.py -d build/
         elif [ "$OPTARG" = "install" ]; then
-            make O=out INSTALL_MOD_PATH=/home/ubuntu/Home/workspace/project/rpi_boot modules_install -j32
+            make O=build INSTALL_MOD_PATH=/home/ubuntu/Home/workspace/project/rpi_boot modules_install -j32
         else
             echo "ERROR input params!!!"
             echo "Please input Right params!"
@@ -69,10 +70,11 @@ while getopts "hc:a:m:d:i:" opt; do
     a)
         echo "./build.sh -a $OPTARG"
         if [ "$OPTARG" = "all" ]; then
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcm2711_defconfig O=out
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=out
-            cp -rf out/arch/arm64/boot/Image /home/ubuntu/Home/workspace/project/rpi_boot/
-            ./scripts/clang-tools/gen_compile_commands.py -d out/
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcm2711_defconfig O=build
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=build
+            cp -rf build/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb /home/ubuntu/Home/workspace/project/rpi_boot/
+            cp -rf build/arch/arm64/boot/Image /home/ubuntu/Home/workspace/project/rpi_boot/
+            ./scripts/clang-tools/gen_compile_commands.py -d build/
         else
             echo "ERROR input params!!!"
             echo "Please input Right params!"
@@ -83,9 +85,9 @@ while getopts "hc:a:m:d:i:" opt; do
     m)
         echo "./build.sh -m $OPTARG"
         if [ "$OPTARG" = "menuconfig" ]; then
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig O=out
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig O=build
         elif [ "$OPTARG" = "modules" ]; then
-            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules O=out
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules O=build
         else
             echo "ERROR input params!!!"
             echo "Please input Right params!"
