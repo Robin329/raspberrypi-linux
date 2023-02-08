@@ -74,7 +74,7 @@ while getopts "hc:a:m:d:i:" opt; do
             make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=build
             sudo make O=build INSTALL_MOD_PATH=/home/robin/nfs_rootfs modules_install -j32
             cp -rf build/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb /home/robin/tftpboot
-            cp -rf build/arch/arm64/boot/Image /home/robin/tftpboot
+            cp -rf build/arch/arm64/boot/Image /home/robin/tftpboot/Image_rpi
             ./scripts/clang-tools/gen_compile_commands.py -d build/
         else
             echo "ERROR input params!!!"
