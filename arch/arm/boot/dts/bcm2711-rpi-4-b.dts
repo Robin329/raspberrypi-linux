@@ -568,3 +568,230 @@ cam0_reg: &cam_dummy_reg {
 			   <&spi0>, "dmas:8=", <&dma40>;
 	};
 };
+
+/* vc4-kms-v3d-pi4-overlay.dts */
+
+&ddc0 {
+	status = "okay";
+};
+
+&ddc1  {
+	status = "okay";
+};
+
+&hdmi0 {
+	status = "okay";
+};
+
+&hdmi1{
+	status = "okay";
+};
+
+&hvs{
+	status = "okay";
+};
+
+&pixelvalve0 {
+	status = "okay";
+};
+
+&pixelvalve1 {
+	status = "okay";
+};
+
+&pixelvalve2 {
+	status = "okay";
+};
+
+&pixelvalve3 {
+	status = "okay";
+};
+
+&pixelvalve4{
+	status = "okay";
+};
+
+&v3d{
+	status = "okay";
+};
+
+&vc4  {
+	status = "okay";
+};
+&txp {
+	status = "okay";
+};
+&fb  {
+	status = "disabled";
+};
+
+&firmwarekms  {
+	status = "disabled";
+};
+
+&vec {
+	status = "disabled";
+};
+
+&hdmi0  {
+	dmas;
+};
+
+&hdmi1 {
+	dmas;
+};
+
+&audio {
+	brcm,disable-hdmi;
+};
+
+&dvp  {
+	status = "okay";
+};
+
+&pixelvalve3{
+	status = "okay";
+};
+
+&vec {
+	status = "okay";
+};
+
+&aon_intr{
+	status = "okay";
+};
+
+/{
+	audio   = <0>,"!17";
+	audio1   = <0>,"!18";
+	noaudio = <0>,"=17", <0>,"=18";
+	composite = <0>, "!1",
+		    <0>, "!2",
+		    <0>, "!3",
+		    <0>, "!4",
+		    <0>, "!6",
+		    <0>, "!7",
+		    <0>, "!8",
+		    <0>, "!9",
+		    <0>, "!10",
+		    <0>, "!16",
+		    <0>, "=21",
+		    <0>, "=22";
+	nohdmi0 =   <0>, "-1-3-8";
+	nohdmi1 =   <0>, "-2-4-10";
+	nohdmi =    <0>, "-1-2-3-4-8-10";
+
+	panel_disp1: panel_disp1@0 {
+		reg = <0>;
+		compatible = "raspberrypi,7inch-dsi", "simple-panel";
+		backlight = <&reg_display>;
+		power-supply = <&reg_display>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&bridge_out>;
+			};
+		};
+	};
+
+	reg_bridge: reg_bridge@0 {
+		reg = <0>;
+		compatible = "regulator-fixed";
+		regulator-name = "bridge_reg";
+		gpio = <&reg_display 0 0>;
+		vin-supply = <&reg_display>;
+		enable-active-high;
+	};
+};
+
+/* edt-ft5406.dsi */
+&i2c_csi_dsi {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	ft5406: ts@38 {
+		compatible = "edt,edt-ft5506";
+		reg = <0x38>;
+
+		touchscreen-size-x = < 800 >;
+		touchscreen-size-y = < 480 >;
+	};
+};
+
+
+&dsi1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	port {
+		dsi_out: endpoint {
+			remote-endpoint = <&bridge_in>;
+		};
+	};
+	bridge@0 {
+		reg = <0>;
+		compatible = "toshiba,tc358762";
+		vddc-supply = <&reg_bridge>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				bridge_in: endpoint {
+					remote-endpoint = <&dsi_out>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				bridge_out: endpoint {
+					remote-endpoint = <&panel_in>;
+				};
+			};
+		};
+	};
+};
+
+
+
+&i2c_csi_dsi {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	reg_display: reg_display@45 {
+		compatible = "raspberrypi,7inch-touchscreen-panel-regulator";
+		reg = <0x45>;
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+};
+
+&ft5406 {
+	touchscreen-inverted-x;
+};
+
+&ft5406 {
+	touchscreen-inverted-y;
+};
+
+&i2c0if {
+	status = "okay";
+};
+
+&i2c0mux {
+	status = "okay";
+};
+&ft5406 {
+	vcc-supply = <&reg_display>;
+	reset-gpio = <&reg_display 1 1>;
+};
+
+/{
+	disable_touch = <0>, "-10-11-12";
+	sizex = <&ft5406>,"touchscreen-size-x:0";
+	sizey = <&ft5406>,"touchscreen-size-y:0";
+	invx = <0>, "-10";
+	invy = <0>, "-11";
+	swapxy = <&ft5406>,"touchscreen-swapped-x-y?";
+};

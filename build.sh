@@ -44,6 +44,7 @@ while getopts "hc:a:m:d:i:" opt; do
         echo "./build.sh -d $OPTARG"
         if [ "$OPTARG" = "dtbs" ]; then
             make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs O=build
+            cp -rf build/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb /home/robin/tftpboot
         else
             echo "ERROR input params!!!"
             echo "Please input Right params!"
@@ -55,7 +56,7 @@ while getopts "hc:a:m:d:i:" opt; do
         echo "./build.sh -d $OPTARG"
         if [ "$OPTARG" = "image" ]; then
             make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=build
-            cp -rf build/arch/arm64/boot/Image /home/robin/tftpboot
+            cp -rf build/arch/arm64/boot/Image /home/robin/tftpboot/Image_rpi
             cp -rf build/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb /home/robin/tftpboot
             ./scripts/clang-tools/gen_compile_commands.py -d build/
         elif [ "$OPTARG" = "install" ]; then
