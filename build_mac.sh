@@ -72,6 +72,8 @@ while getopts "hc:a:m:d:i:" opt; do
         if [ "$OPTARG" = "all" ]; then
             make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bcm2711_defconfig O=build
             make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs -j44 O=build
+            make O=build INSTALL_MOD_PATH=/home/ubuntu/Home/workspace/project/rpi_boot modules_install
+            make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs O=build
             cp -rf build/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb /home/ubuntu/Home/workspace/project/rpi_boot/
             cp -rf build/arch/arm64/boot/Image /home/ubuntu/Home/workspace/project/rpi_boot/
             ./scripts/clang-tools/gen_compile_commands.py -d build/
